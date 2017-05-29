@@ -1,5 +1,8 @@
 #include "visualization.h"
 #include "world.h"
+#include "robo/sensing.h"
+#include <tf2/LinearMath/Vector3.h>
+#include <vector>
 
 #include <geolib/Shape.h>
 
@@ -18,7 +21,7 @@ cv::Point2d worldToCanvas(const geo::Vector3& p)
 
 // ----------------------------------------------------------------------------------------------------
 
-void visualize(const World& world, Id robot_id)
+void visualize(const World& world, Id robot_id, emc::LaserData scan)
 {
     const Object& robot = world.object(robot_id);
 
@@ -73,6 +76,42 @@ void visualize(const World& world, Id robot_id)
         }
     }
 
+
+    std::vector<tf2::Vector3> points = findEdgePoints(scan);
+    int pointSize = 8;
+    cv::Scalar edgePointColor(0, 255, 0);
+    for(std::vector<tf2::Vector3>::const_iterator it3 = points.begin(); it3 != points.end(); ++it3)
+    {
+        const tf2::Vector3& point = *it3;
+        geo::Vector3 center(point.getX(), point.getY(), point.getZ());
+        //cv::Point2d center(point.getX(), point.getY());
+        cv::Point2d p_center = worldToCanvas(center);
+        cv::circle(canvas, p_center, pointSize, edgePointColor, -1);
+    }
+
+    points = findMidPoints(scan);
+    cv::Scalar midPointColor(255, 0, 0);
+    for(std::vector<tf2::Vector3>::const_iterator it3 = points.begin(); it3 != points.end(); ++it3)
+    {
+        const tf2::Vector3& point = *it3;
+        geo::Vector3 center(point.getX(), point.getY(), point.getZ());
+        //cv::Point2d center(point.getX(), point.getY());
+        cv::Point2d p_center = worldToCanvas(center);
+        cv::circle(canvas, p_center, pointSize, midPointColor, -1);
+    }
+
+//    points = findJumpPoints(scan);
+//    cv::Scalar jumpPointColor(122, 122, 0);
+//    for(std::vector<tf2::Vector3>::const_iterator it3 = points.begin(); it3 != points.end(); ++it3)
+//    {
+//        const tf2::Vector3& point = *it3;
+//        geo::Vector3 center(point.getX(), point.getY(), point.getZ());
+//        //cv::Point2d center(point.getX(), point.getY());
+//        std::cout << "(x, y, z) = " << point.getX() << ", " << point.getY() << ", " << point.getZ() << ")" << std::endl;
+//        cv::Point2d p_center = worldToCanvas(center);
+//        cv::circle(canvas, p_center, pointSize - 2, jumpPointColor, -1);
+//    }
+//
     cv::imshow("simulator", canvas);
     cv::waitKey(3);
 }

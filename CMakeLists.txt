@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(emc_simulator)
+set(main_dir ${PROJECT_SOURCE_DIR}/../../)
 
 find_package(catkin REQUIRED COMPONENTS
     geolib2
     code_profiler
     roslib
+    roscpp
+    geometry_msgs
+    sensor_msgs
 )
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 # find_package(Boost REQUIRED COMPONENTS system program_options)
 # find_package(PCL REQUIRED)
@@ -55,19 +60,18 @@ include_directories(
     include
     3rdparty
     ${catkin_INCLUDE_DIRS}
+    ${main_dir}/include
 )
 
 add_library(polypartition
     3rdparty/polypartition/polypartition.cpp
 )
 
-add_executable(pico_simulator
+add_executable(pico_simulator2
     src/main.cpp
     src/world.cpp
     src/heightmap.cpp
     src/visualization.cpp
     src/lrf.cpp
 )
-target_link_libraries(pico_simulator polypartition ${catkin_LIBRARIES})
-
-
+target_link_libraries(pico_simulator2 polypartition ${catkin_LIBRARIES} robolib emc-framework)

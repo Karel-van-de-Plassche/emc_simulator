@@ -21,7 +21,9 @@
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Empty.h>
+#include <robo/debugging.h>
 
+log_level_t GLOBAL_LEVEL = LOG_INFO;
 geometry_msgs::Twist::ConstPtr base_ref_;
 bool request_open_door_;
 
@@ -96,6 +98,8 @@ int main(int argc, char **argv)
     // Set laser pose (in robot frame)
     geo::Pose3D laser_pose = geo::Pose3D::identity();
     laser_pose.t.z = 0.3;
+    emc::IO io;
+    emc::LaserData scan;
 
     ros::Rate r(cycle_freq);
     while(ros::ok())
@@ -157,7 +161,8 @@ int main(int argc, char **argv)
 
         // Visualize
         if (visualize)
-            visualization::visualize(world, robot_id);
+            io.readLaserData(scan);
+            visualization::visualize(world, robot_id, scan);
 
         r.sleep();
     }
