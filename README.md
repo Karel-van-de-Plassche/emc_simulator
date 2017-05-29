@@ -19,7 +19,7 @@ make
 ```
 Copy visualizer to weird EMC directory..
 ```
-cp $MAIN_REPO/bin/pico_simulator2 $HOME/.emc/system/src/emc_simulator/
+cp $MAIN_REPO/devel/lib/emc_simulator/pico_simulator2 $HOME/.emc/system/src/emc_simulator/
 ```
 And go! 
 ```
