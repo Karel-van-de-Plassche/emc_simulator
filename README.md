@@ -10,7 +10,7 @@ cd emc
 ```
 Clone visualizer
 ```
-git clone git@github.com:Karel-van-de-Plassche/emc_simulator.git
+git clone https://github.com/Karel-van-de-Plassche/emc_simulator.git
 ```
 Build visualizer
 ```
