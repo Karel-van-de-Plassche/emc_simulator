@@ -1,6 +1,7 @@
 #include "visualization.h"
 #include "world.h"
 #include "robo/sensing.h"
+#include "robo/doors.h"
 #include <tf2/LinearMath/Vector3.h>
 #include <vector>
 
@@ -98,6 +99,19 @@ void visualize(const World& world, Id robot_id, emc::LaserData scan)
         //cv::Point2d center(point.getX(), point.getY());
         cv::Point2d p_center = worldToCanvas(center);
         cv::circle(canvas, p_center, pointSize, midPointColor, -1);
+    }
+
+    std::cout << "hello";
+    std::vector<int> changeRays = laserChange(scan);
+    points = calculateXY(scan, changeRays);
+    cv::Scalar changePointColor(122, 122, 0);
+    for(std::vector<tf2::Vector3>::const_iterator it3 = points.begin(); it3 != points.end(); ++it3)
+    {
+        const tf2::Vector3& point = *it3;
+        geo::Vector3 center(point.getX(), point.getY(), point.getZ());
+        //cv::Point2d center(point.getX(), point.getY());
+        cv::Point2d p_center = worldToCanvas(center);
+        cv::circle(canvas, p_center, pointSize, changePointColor, -1);
     }
 
 //    points = findJumpPoints(scan);
